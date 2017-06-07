@@ -25,11 +25,12 @@ class Block(pygame.sprite.Sprite):
     def __init__(self, color):
         # Call the parent class (Sprite) constructor
         super().__init__()
- 
+        
         self.image = pygame.Surface([20, 15])
         self.image.fill(color)
- 
-        self.rect = self.image.get_rect()
+         
+        self.rect = self.image.get_rect()        
+        
  
  
 class Player(pygame.sprite.Sprite):
@@ -40,11 +41,10 @@ class Player(pygame.sprite.Sprite):
         # Call the parent class (Sprite) constructor
         super().__init__()
  
-        self.image = pygame.Surface([20, 20])
-        self.image.fill(RED)
+               
+        self.image = pygame.image.load("xwing.png").convert()
  
         self.rect = self.image.get_rect()
- 
     def update(self):
         """ Update the player's position. """
         # Get the current mouse position. This returns the position
@@ -117,8 +117,9 @@ done = False
 clock = pygame.time.Clock()
  
 score = 0
-player.rect.y = 370
+player = Player()
 
+player_image = pygame.image.load("xwing.png").convert()
 
 background_image = pygame.image.load("backround1.jpg").convert()
 
@@ -171,7 +172,7 @@ while not done:
     # Clear the screen
     #screen.fill(WHITE)
     
-     #screen.blit(player_image, [x, y])
+    screen.blit(player.image, [x, y])
     screen.blit(background_image, [0, 0])
     # Draw all the spites
     all_sprites_list.draw(screen)
