@@ -43,7 +43,7 @@ class Player(pygame.sprite.Sprite):
  
                
         self.image = pygame.image.load("xwing.png").convert()
- 
+        self.image.set_colorkey(WHITE)
         self.rect = self.image.get_rect()
     def update(self):
         """ Update the player's position. """
@@ -53,8 +53,8 @@ class Player(pygame.sprite.Sprite):
  
         # Set the player x position to the mouse x position
         self.rect.x = pos[0]
- 
- 
+        self.rect.y = pos[1]
+
 class Bullet(pygame.sprite.Sprite):
     """ This class represents the bullet . """
     def __init__(self):
@@ -62,13 +62,14 @@ class Bullet(pygame.sprite.Sprite):
         super().__init__()
  
         self.image = pygame.Surface([4, 10])
-        self.image.fill(BLACK)
+        self.image.fill(WHITE)
  
         self.rect = self.image.get_rect()
  
     def update(self):
         """ Move the bullet. """
         self.rect.y -= 3
+ 
  
  
 # --- Create the window
@@ -96,11 +97,11 @@ bullet_list = pygame.sprite.Group()
  
 for i in range(50):
     # This represents a block
-    block = Block(BLUE)
+    block = Block(WHITE)
  
     # Set a random location for the block
     block.rect.x = random.randrange(screen_width)
-    block.rect.y = random.randrange(350)
+    block.rect.y = random.randrange(275)
  
     # Add the block to the list of objects
     block_list.add(block)
@@ -119,9 +120,18 @@ clock = pygame.time.Clock()
 score = 0
 player = Player()
 
+# Get the current mouse position. This returns the position
+# as a list of two numbers.
+player_position = pygame.mouse.get_pos()
+x = player_position[0]
+y = player_position[1]
+ 
+
 player_image = pygame.image.load("xwing.png").convert()
 
+
 background_image = pygame.image.load("backround1.jpg").convert()
+
 
 # -------- Main Program Loop -----------
 while not done:
@@ -134,16 +144,16 @@ while not done:
             # Fire a bullet if the user clicks the mouse button
             bullet = Bullet()
             # Set the bullet so it is where the player is
-            bullet.rect.x = player.rect.x
-            bullet.rect.y = player.rect.y
+            bullet.rect.x = player.rect.x + [0,1]
+            bullet.rect.y = player.rect.y + [0,1]
             # Add the bullet to the lists
             all_sprites_list.add(bullet)
             bullet_list.add(bullet)
             
-    player_position = pygame.mouse.get_pos()
-    x = player_position[0]
-    y = player_position[1]    
-            
+            player_position = pygame.mouse.get_pos()
+            x = player_position[0]
+            y = player_position[1]    
+                
     # --- Game logic
  
     # Call the update() method on all the sprites
@@ -172,6 +182,7 @@ while not done:
     # Clear the screen
     #screen.fill(WHITE)
     
+    
     screen.blit(player.image, [x, y])
     screen.blit(background_image, [0, 0])
     # Draw all the spites
@@ -184,10 +195,3 @@ while not done:
     clock.tick(60)
  
 pygame.quit()
-
-
-
-
-
-
-
