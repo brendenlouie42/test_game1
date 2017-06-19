@@ -28,10 +28,31 @@ class Block(pygame.sprite.Sprite):
         
         self.image = pygame.Surface([20, 15])
         self.image.fill(color)
-         
         self.rect = self.image.get_rect()        
+    def update(self):
+         # Move the block down one pixel
+        self.rect.y += 1
+        if self.rect.y > screen_height:
+                self.rect.y = random.randrange(-100, -10)
+                self.rect.x = random.randrange(0, screen_width)
+      
+         # If block is too far down, reset to top of screen.
+        if self.rect.y > 410:
+                self.reset_pos()
+             # See if the player block has collided with anything.
+                blocks_hit_list = pygame.sprite.spritecollide(player, block_list, False)
+              
+             # Check the list of collisions.
+             
+              
+                 # Reset block to the top of the screen to fall again.
+                block.reset_pos()            
         
- 
+        self.image = pygame.image.load("Pacman-red-blinky.sh.png")
+        
+        
+        
+  
  
 class Player(pygame.sprite.Sprite):
     """ This class represents the Player. """
@@ -53,7 +74,15 @@ class Player(pygame.sprite.Sprite):
  
         # Set the player x position to the mouse x position
         self.rect.x = pos[0]
-        self.rect.y = pos[1]
+        self.rect.y = pos[1] 
+    def reset_pos(self):
+   
+        self.rect.y = random.randrange(-300, -20)
+        self.rect.x = random.randrange(0, screen_width)
+ 
+    
+ 
+
 
 class Bullet(pygame.sprite.Sprite):
     """ This class represents the bullet . """
@@ -69,7 +98,7 @@ class Bullet(pygame.sprite.Sprite):
     def update(self):
         """ Move the bullet. """
         self.rect.y -= 3
- 
+        
  
  
 # --- Create the window
@@ -120,6 +149,7 @@ clock = pygame.time.Clock()
 score = 0
 player = Player()
 
+
 # Get the current mouse position. This returns the position
 # as a list of two numbers.
 player_position = pygame.mouse.get_pos()
@@ -139,21 +169,23 @@ while not done:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
- 
+      
         elif event.type == pygame.MOUSEBUTTONDOWN:
             # Fire a bullet if the user clicks the mouse button
             bullet = Bullet()
             # Set the bullet so it is where the player is
-            bullet.rect.x = player.rect.x + [0,1]
-            bullet.rect.y = player.rect.y + [0,1]
+            bullet.rect.x = player.rect.x
+            bullet.rect.y = player.rect.y 
             # Add the bullet to the lists
             all_sprites_list.add(bullet)
             bullet_list.add(bullet)
             
             player_position = pygame.mouse.get_pos()
-            x = player_position[0]
-            y = player_position[1]    
-                
+            player.rect.x = player_position[0]
+            player.rect.y = player_position[1]    
+             
+            # Call the update() method for all blocks in the block_list
+            block_list.update()                
     # --- Game logic
  
     # Call the update() method on all the sprites
